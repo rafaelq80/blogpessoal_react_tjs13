@@ -117,8 +117,6 @@ function FormTema() {
 		navigate('/temas')
 	}
 
-	console.log(JSON.stringify(tema))
-
 	return (
 		<div className="container flex flex-col items-center justify-center mx-auto">
 			<h1 className="text-4xl text-center my-8">
