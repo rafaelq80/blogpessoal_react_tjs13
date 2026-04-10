@@ -2,28 +2,21 @@ import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SyncLoader } from 'react-spinners'
 import { AuthContext } from '../../../contexts/AuthContext'
-import type Tema from '../../../models/Tema'
+import type Postagem from '../../../models/Postagem'
 import { buscar } from '../../../services/Service'
-import CardTema from '../cardtema/CardTema'
+import CardPostagem from '../cardpostagem/CardPostagem'
 import { ToastAlerta } from '../../../utils/ToastAlerta'
 
-function ListaTemas() {
-	// Objeto responsável por redirecionar o usuário para uma outra rota
+function ListaPostagens() {
 	const navigate = useNavigate()
 
-	// Estado para controlar o Loader (animação de carregamento)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 
-	// Estado que irá receber todos os temas persistidos no Backend
-	const [temas, setTemas] = useState<Tema[]>([])
+	const [postagens, setPostagens] = useState<Postagem[]>([])
 
-	// Acessa o token do usuário autenticado
 	const { usuario, handleLogout } = useContext(AuthContext)
-
-	// Cria um objeto para armazenar o token
 	const token = usuario.token
 
-	// Cria um useEffect para monitorar o token
 	useEffect(() => {
 		if (token === '') {
 			ToastAlerta('Você precisa estar logado!', "info")
@@ -31,17 +24,15 @@ function ListaTemas() {
 		}
 	}, [token])
 
-	// Cria um useEffect para inicializar a função buscarTemas
 	useEffect(() => {
-		buscarTemas()
-	}, [temas.length])
+		buscarPostagens()
+	}, [postagens.length])
 
-	// Função para buscar todos os temas no backend
-	async function buscarTemas() {
+	async function buscarPostagens() {
 		try {
 			setIsLoading(true)
 
-			await buscar('/temas', setTemas, {
+			await buscar('/postagens', setPostagens, {
 				headers: { Authorization: token },
 			})
 		} catch (error: any) {
@@ -63,9 +54,10 @@ function ListaTemas() {
 
 			<div className="flex justify-center w-full px-4 my-4">
 				<div className="container flex flex-col">
-					{!isLoading && temas.length === 0 && (
+					{!isLoading && postagens.length === 0 && (
 						<span className="text-3xl text-center my-8">
-							Nenhum Tema foi encontrado!
+							Nenhuma Postagem foi
+							encontrada!
 						</span>
 					)}
 
@@ -73,10 +65,10 @@ function ListaTemas() {
 						className="grid grid-cols-1 md:grid-cols-2 
                                     lg:grid-cols-3 gap-8"
 					>
-						{temas.map((tema) => (
-							<CardTema
-								key={tema.id}
-								tema={tema}
+						{postagens.map((postagem) => (
+							<CardPostagem
+								key={postagem.id}
+								postagem={postagem}
 							/>
 						))}
 					</div>
@@ -85,4 +77,4 @@ function ListaTemas() {
 		</>
 	)
 }
-export default ListaTemas
+export default ListaPostagens
